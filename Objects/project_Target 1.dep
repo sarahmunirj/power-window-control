@@ -1,0 +1,108 @@
+Dependencies for Project 'project', Target 'Target 1': (DO NOT MODIFY !)
+F (.\startup_rvmdk.S)(0x618F1202)(--cpu Cortex-M4.fp --pd "__EVAL SETA 1" -g --apcs=interwork -I.\RTE\_Target_1-IC:\Keil_v5\ARM\PACK\Keil\TM4C_DFP\1.1.0\Device\Include\TM4C123-IC:\Keil_v5\ARM\CMSIS\Include--pd "__UVISION_VERSION SETA 525" --pd "TM4C123GH6PM SETA 1"--list .\listings\startup_rvmdk.lst --xref -o .\objects\startup_rvmdk.o --depend .\objects\startup_rvmdk.d)
+F (.\main.c)(0x61A17263)(--c99 -c --cpu Cortex-M4.fp -D__EVAL -g -O0 --apcs=interwork --split_sections -I . -I .\FreeRTOS\source\include -I .\FreeRTOS\source\portable\RVDS\ARM_CM4F -I .\Libraries\-I.\RTE\_Target_1-IC:\Keil_v5\ARM\PACK\Keil\TM4C_DFP\1.1.0\Device\Include\TM4C123-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="525" -DTM4C123GH6PM -Drvmdk -DPART_TM4C123GH6PM -DTARGET_IS_TM4C123_RB1-o .\objects\main.o --omf_browse .\objects\main.crf --depend .\objects\main.d)
+I (C:\Keil_v5\ARM\ARMCC\include\stdbool.h)(0x599F218E)
+I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x599F218E)
+I (.\FreeRTOSConfig.h)(0x60EB33F2)
+I (.\FreeRTOS\source\include\FreeRTOS.h)(0x60EB33F2)
+I (C:\Keil_v5\ARM\ARMCC\include\stddef.h)(0x599F218C)
+I (.\FreeRTOS\source\include\projdefs.h)(0x60EB33F2)
+I (.\FreeRTOS\source\include\portable.h)(0x60EB33F2)
+I (.\FreeRTOS\source\include\deprecated_definitions.h)(0x60EB33F2)
+I (.\FreeRTOS\source\portable\RVDS\ARM_CM4F\portmacro.h)(0x60EB33F2)
+I (.\FreeRTOS\source\include\mpu_wrappers.h)(0x60EB33F2)
+I (.\Libraries\inc/hw_memmap.h)(0x61897009)
+I (.\Libraries\inc/hw_ints.h)(0x61897009)
+I (.\Libraries\driverlib/debug.h)(0x61897006)
+I (.\Libraries\driverlib/gpio.h)(0x61897006)
+I (.\Libraries\driverlib/rom.h)(0x61897006)
+I (.\Libraries\driverlib/sysctl.h)(0x618D9794)
+I (.\Libraries\driverlib/systick.h)(0x61897006)
+I (.\FreeRTOS\source\include\task.h)(0x60EB33F2)
+I (.\FreeRTOS\source\include\list.h)(0x60EB33F2)
+F (.\FreeRTOS\Source\list.c)(0x60EB33F2)(--c99 -c --cpu Cortex-M4.fp -D__EVAL -g -O0 --apcs=interwork --split_sections -I . -I .\FreeRTOS\source\include -I .\FreeRTOS\source\portable\RVDS\ARM_CM4F -I .\Libraries\-I.\RTE\_Target_1-IC:\Keil_v5\ARM\PACK\Keil\TM4C_DFP\1.1.0\Device\Include\TM4C123-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="525" -DTM4C123GH6PM -Drvmdk -DPART_TM4C123GH6PM -DTARGET_IS_TM4C123_RB1-o .\objects\list.o --omf_browse .\objects\list.crf --depend .\objects\list.d)
+I (C:\Keil_v5\ARM\ARMCC\include\stdlib.h)(0x599F218C)
+I (.\FreeRTOS\source\include\FreeRTOS.h)(0x60EB33F2)
+I (C:\Keil_v5\ARM\ARMCC\include\stddef.h)(0x599F218C)
+I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x599F218E)
+I (.\FreeRTOSConfig.h)(0x60EB33F2)
+I (.\FreeRTOS\source\include\projdefs.h)(0x60EB33F2)
+I (.\FreeRTOS\source\include\portable.h)(0x60EB33F2)
+I (.\FreeRTOS\source\include\deprecated_definitions.h)(0x60EB33F2)
+I (.\FreeRTOS\source\portable\RVDS\ARM_CM4F\portmacro.h)(0x60EB33F2)
+I (.\FreeRTOS\source\include\mpu_wrappers.h)(0x60EB33F2)
+I (.\FreeRTOS\source\include\list.h)(0x60EB33F2)
+F (.\FreeRTOS\Source\queue.c)(0x60EB33F2)(--c99 -c --cpu Cortex-M4.fp -D__EVAL -g -O0 --apcs=interwork --split_sections -I . -I .\FreeRTOS\source\include -I .\FreeRTOS\source\portable\RVDS\ARM_CM4F -I .\Libraries\-I.\RTE\_Target_1-IC:\Keil_v5\ARM\PACK\Keil\TM4C_DFP\1.1.0\Device\Include\TM4C123-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="525" -DTM4C123GH6PM -Drvmdk -DPART_TM4C123GH6PM -DTARGET_IS_TM4C123_RB1-o .\objects\queue.o --omf_browse .\objects\queue.crf --depend .\objects\queue.d)
+I (C:\Keil_v5\ARM\ARMCC\include\stdlib.h)(0x599F218C)
+I (C:\Keil_v5\ARM\ARMCC\include\string.h)(0x599F218C)
+I (.\FreeRTOS\source\include\FreeRTOS.h)(0x60EB33F2)
+I (C:\Keil_v5\ARM\ARMCC\include\stddef.h)(0x599F218C)
+I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x599F218E)
+I (.\FreeRTOSConfig.h)(0x60EB33F2)
+I (.\FreeRTOS\source\include\projdefs.h)(0x60EB33F2)
+I (.\FreeRTOS\source\include\portable.h)(0x60EB33F2)
+I (.\FreeRTOS\source\include\deprecated_definitions.h)(0x60EB33F2)
+I (.\FreeRTOS\source\portable\RVDS\ARM_CM4F\portmacro.h)(0x60EB33F2)
+I (.\FreeRTOS\source\include\mpu_wrappers.h)(0x60EB33F2)
+I (.\FreeRTOS\source\include\task.h)(0x60EB33F2)
+I (.\FreeRTOS\source\include\list.h)(0x60EB33F2)
+I (.\FreeRTOS\source\include\queue.h)(0x60EB33F2)
+F (.\FreeRTOS\Source\tasks.c)(0x60EB33F2)(--c99 -c --cpu Cortex-M4.fp -D__EVAL -g -O0 --apcs=interwork --split_sections -I . -I .\FreeRTOS\source\include -I .\FreeRTOS\source\portable\RVDS\ARM_CM4F -I .\Libraries\-I.\RTE\_Target_1-IC:\Keil_v5\ARM\PACK\Keil\TM4C_DFP\1.1.0\Device\Include\TM4C123-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="525" -DTM4C123GH6PM -Drvmdk -DPART_TM4C123GH6PM -DTARGET_IS_TM4C123_RB1-o .\objects\tasks.o --omf_browse .\objects\tasks.crf --depend .\objects\tasks.d)
+I (C:\Keil_v5\ARM\ARMCC\include\stdlib.h)(0x599F218C)
+I (C:\Keil_v5\ARM\ARMCC\include\string.h)(0x599F218C)
+I (.\FreeRTOS\source\include\FreeRTOS.h)(0x60EB33F2)
+I (C:\Keil_v5\ARM\ARMCC\include\stddef.h)(0x599F218C)
+I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x599F218E)
+I (.\FreeRTOSConfig.h)(0x60EB33F2)
+I (.\FreeRTOS\source\include\projdefs.h)(0x60EB33F2)
+I (.\FreeRTOS\source\include\portable.h)(0x60EB33F2)
+I (.\FreeRTOS\source\include\deprecated_definitions.h)(0x60EB33F2)
+I (.\FreeRTOS\source\portable\RVDS\ARM_CM4F\portmacro.h)(0x60EB33F2)
+I (.\FreeRTOS\source\include\mpu_wrappers.h)(0x60EB33F2)
+I (.\FreeRTOS\source\include\task.h)(0x60EB33F2)
+I (.\FreeRTOS\source\include\list.h)(0x60EB33F2)
+I (.\FreeRTOS\source\include\timers.h)(0x60EB33F2)
+I (.\FreeRTOS\source\include\stack_macros.h)(0x60EB33F2)
+F (.\FreeRTOS\Source\timers.c)(0x60EB33F2)(--c99 -c --cpu Cortex-M4.fp -D__EVAL -g -O0 --apcs=interwork --split_sections -I . -I .\FreeRTOS\source\include -I .\FreeRTOS\source\portable\RVDS\ARM_CM4F -I .\Libraries\-I.\RTE\_Target_1-IC:\Keil_v5\ARM\PACK\Keil\TM4C_DFP\1.1.0\Device\Include\TM4C123-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="525" -DTM4C123GH6PM -Drvmdk -DPART_TM4C123GH6PM -DTARGET_IS_TM4C123_RB1-o .\objects\timers.o --omf_browse .\objects\timers.crf --depend .\objects\timers.d)
+I (C:\Keil_v5\ARM\ARMCC\include\stdlib.h)(0x599F218C)
+I (.\FreeRTOS\source\include\FreeRTOS.h)(0x60EB33F2)
+I (C:\Keil_v5\ARM\ARMCC\include\stddef.h)(0x599F218C)
+I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x599F218E)
+I (.\FreeRTOSConfig.h)(0x60EB33F2)
+I (.\FreeRTOS\source\include\projdefs.h)(0x60EB33F2)
+I (.\FreeRTOS\source\include\portable.h)(0x60EB33F2)
+I (.\FreeRTOS\source\include\deprecated_definitions.h)(0x60EB33F2)
+I (.\FreeRTOS\source\portable\RVDS\ARM_CM4F\portmacro.h)(0x60EB33F2)
+I (.\FreeRTOS\source\include\mpu_wrappers.h)(0x60EB33F2)
+I (.\FreeRTOS\source\include\task.h)(0x60EB33F2)
+I (.\FreeRTOS\source\include\list.h)(0x60EB33F2)
+I (.\FreeRTOS\source\include\queue.h)(0x60EB33F2)
+I (.\FreeRTOS\source\include\timers.h)(0x60EB33F2)
+F (.\FreeRTOS\Source\portable\RVDS\ARM_CM4F\port.c)(0x60EB33F2)(--c99 -c --cpu Cortex-M4.fp -D__EVAL -g -O0 --apcs=interwork --split_sections -I . -I .\FreeRTOS\source\include -I .\FreeRTOS\source\portable\RVDS\ARM_CM4F -I .\Libraries\-I.\RTE\_Target_1-IC:\Keil_v5\ARM\PACK\Keil\TM4C_DFP\1.1.0\Device\Include\TM4C123-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="525" -DTM4C123GH6PM -Drvmdk -DPART_TM4C123GH6PM -DTARGET_IS_TM4C123_RB1-o .\objects\port.o --omf_browse .\objects\port.crf --depend .\objects\port.d)
+I (.\FreeRTOS\source\include\FreeRTOS.h)(0x60EB33F2)
+I (C:\Keil_v5\ARM\ARMCC\include\stddef.h)(0x599F218C)
+I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x599F218E)
+I (.\FreeRTOSConfig.h)(0x60EB33F2)
+I (.\FreeRTOS\source\include\projdefs.h)(0x60EB33F2)
+I (.\FreeRTOS\source\include\portable.h)(0x60EB33F2)
+I (.\FreeRTOS\source\include\deprecated_definitions.h)(0x60EB33F2)
+I (.\FreeRTOS\source\portable\RVDS\ARM_CM4F\portmacro.h)(0x60EB33F2)
+I (.\FreeRTOS\source\include\mpu_wrappers.h)(0x60EB33F2)
+I (.\FreeRTOS\source\include\task.h)(0x60EB33F2)
+I (.\FreeRTOS\source\include\list.h)(0x60EB33F2)
+F (.\FreeRTOS\Source\portable\MemMang\heap_1.c)(0x60EB33F2)(--c99 -c --cpu Cortex-M4.fp -D__EVAL -g -O0 --apcs=interwork --split_sections -I . -I .\FreeRTOS\source\include -I .\FreeRTOS\source\portable\RVDS\ARM_CM4F -I .\Libraries\-I.\RTE\_Target_1-IC:\Keil_v5\ARM\PACK\Keil\TM4C_DFP\1.1.0\Device\Include\TM4C123-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="525" -DTM4C123GH6PM -Drvmdk -DPART_TM4C123GH6PM -DTARGET_IS_TM4C123_RB1-o .\objects\heap_1.o --omf_browse .\objects\heap_1.crf --depend .\objects\heap_1.d)
+I (C:\Keil_v5\ARM\ARMCC\include\stdlib.h)(0x599F218C)
+I (.\FreeRTOS\source\include\FreeRTOS.h)(0x60EB33F2)
+I (C:\Keil_v5\ARM\ARMCC\include\stddef.h)(0x599F218C)
+I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x599F218E)
+I (.\FreeRTOSConfig.h)(0x60EB33F2)
+I (.\FreeRTOS\source\include\projdefs.h)(0x60EB33F2)
+I (.\FreeRTOS\source\include\portable.h)(0x60EB33F2)
+I (.\FreeRTOS\source\include\deprecated_definitions.h)(0x60EB33F2)
+I (.\FreeRTOS\source\portable\RVDS\ARM_CM4F\portmacro.h)(0x60EB33F2)
+I (.\FreeRTOS\source\include\mpu_wrappers.h)(0x60EB33F2)
+I (.\FreeRTOS\source\include\task.h)(0x60EB33F2)
+I (.\FreeRTOS\source\include\list.h)(0x60EB33F2)
+F (.\FreeRTOSConfig.h)(0x60EB33F2)()
+F (.\FreeRTOS\Source\include\timers.h)(0x60EB33F2)()
+F (.\Libraries\driverlib\rvmdk\driverlib.lib)(0x61897006)()
