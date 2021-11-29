@@ -19,10 +19,10 @@ uint32_t SystemCoreClock = 16000000;
 #define LED_BASE GPIO_PORTF_BASE
 #define RED_LED GPIO_PIN_1
 
-#define Button_PERIPH SYSCTL_PERIPH_GPIOE
-#define ButtonBase GPIO_PORTE_BASE
-#define Button GPIO_PIN_1
-#define ButtonInt GPIO_INT_PIN_1
+#define Button_PERIPH SYSCTL_PERIPH_GPIOC
+#define ButtonBase GPIO_PORTC_BASE
+#define Button GPIO_PIN_7
+#define ButtonInt GPIO_INT_PIN_7
 
 volatile  uint8_t state=0;
 

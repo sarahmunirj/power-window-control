@@ -21,23 +21,24 @@
 #define RED_LED 				GPIO_PIN_1
 #define BLUE_LED 				GPIO_PIN_2
 
-#define BUTT_PERIPH 		SYSCTL_PERIPH_GPIOD
-#define BUTT_BASE 			GPIO_PORTD_BASE
-#define PASS_UP 				GPIO_PIN_0
-#define PASS_DOWN 			GPIO_PIN_1	
-#define DRIVER_UP 			GPIO_PIN_2
-#define DRIVER_DOWN 		GPIO_PIN_3	
-#define PASS_UP_INT 				GPIO_INT_PIN_0
-#define PASS_DOWN_INT 			GPIO_INT_PIN_1	
-#define DRIVER_UP_INT 			GPIO_INT_PIN_2
-#define DRIVER_DOWN_INT 		GPIO_INT_PIN_3	
+#define BUTT_PERIPH 		SYSCTL_PERIPH_GPIOC
+#define BUTT_BASE 			GPIO_PORTC_BASE
+#define PASS_UP 				GPIO_PIN_4
+#define PASS_DOWN 			GPIO_PIN_5	
+#define DRIVER_UP 			GPIO_PIN_6
+#define DRIVER_DOWN 		GPIO_PIN_7	
+#define PASS_UP_INT 				GPIO_INT_PIN_4
+#define PASS_DOWN_INT 			GPIO_INT_PIN_5	
+#define DRIVER_UP_INT 			GPIO_INT_PIN_6
+#define DRIVER_DOWN_INT 		GPIO_INT_PIN_7	
 
 #define MOT1_PERIPH			SYSCTL_PERIPH_GPIOA
 #define MOT1_BASE 			GPIO_PORTA_BASE
 #define MOT1_A 					GPIO_PIN_4
 #define MOT1_B 					GPIO_PIN_3
 
-#define FULL_UP_DOWN_US (SysCtlClockGet()/3)*2
+uint32_t SystemCoreClock = 16000000;
+#define FULL_UP_DOWN_US ((SystemCoreClock/3)*5)
 //Define system clock
 
 enum pass_state_e{
@@ -73,7 +74,6 @@ typedef struct inputs{
 	bool obstacle;
 } inputs;
 
-uint32_t SystemCoreClock = 16000000;
 volatile uint32_t counter = 0;
 volatile uint32_t previous_counter = 0;
 volatile uint32_t last_up = 0;
@@ -121,11 +121,9 @@ void Button_Handler(void){
 	uint32_t status=0;
 	uint32_t value=0;
 
-	uint32_t Pin_Status=0;
-	ROM_SysCtlDelay(50000);
+	ROM_SysCtlDelay(30000);
   status = GPIOIntStatus(BUTT_BASE,true);
   GPIOIntClear(BUTT_BASE,GPIO_ALL_PINS);
-	
   if((status & DRIVER_UP_INT)==DRIVER_UP_INT)
 	{
 		value = GPIOPinRead(BUTT_BASE, DRIVER_UP);
@@ -134,12 +132,12 @@ void Button_Handler(void){
 			Inputs.driver_up = 1;
 			last_up = counter;
 		}
-//		else if (counter - last_up <= 500)
-//		{
-//			full_up = 1;
-//			Inputs.driver_up = 1;
-//			last_up = 0;
-//		}
+		else if (counter - last_up <= 500)
+		{
+			full_up = 1;
+			Inputs.driver_up = 1;
+			last_up = 0;
+		}
 		else 
 		{
 		Inputs.driver_up = 0;
@@ -153,12 +151,12 @@ void Button_Handler(void){
 			Inputs.driver_down = 1;
 			last_down = counter;
 		}
-//		else if (counter - last_down <= 500)
-//		{
-//			full_down = 1;
-//			Inputs.driver_down = 1;
-//			last_down = 0;
-//		}
+		else if (counter - last_down <= 500)
+		{
+			full_down = 1;
+			Inputs.driver_down = 1;
+			last_down = 0;
+		}
 		else 
 		{	
 			Inputs.driver_down = 0;
@@ -172,12 +170,12 @@ void Button_Handler(void){
 			Inputs.pass_up = 1;
 			last_up = counter;
 		}
-//		else if (counter - last_up <= 500)
-//		{
-//			full_up = 1;
-//			Inputs.pass_up = 1;
-//			last_up = 0;
-//		}
+		else if (counter - last_up <= 500)
+		{
+			full_up = 1;
+			Inputs.pass_up = 1;
+			last_up = 0;
+		}
 		else 
 		{
 			Inputs.pass_up = 0;
@@ -191,12 +189,12 @@ void Button_Handler(void){
 			Inputs.pass_down = 1;
 			last_down = counter;
 		}
-//		else if ((counter - last_down <= 500))
-//		{
-//			full_down = 1;
-//			Inputs.pass_down = 1;
-//			last_down = 0;
-//		}
+		else if ((counter - last_down <= 500))
+		{
+			full_down = 1;
+			Inputs.pass_down = 1;
+			last_down = 0;
+		}
 				else 
 		{
 			Inputs.pass_down = 0;
@@ -287,39 +285,39 @@ int main()
 			{
 				if(Inputs.driver_up)
 				{
-					if(State.CurrentDriverState != driver_up)
+					if(full_up == 1)
+					{
+						Passenger_Up();
+						full_up = 0;
+						Inputs.driver_up = 0;
+						ROM_SysCtlDelay(FULL_UP_DOWN_US);
+						Passenger_Stop();
+						State.CurrentDriverState = driver_neutral;
+					}
+					else if(State.CurrentDriverState != driver_up)
 					{
 						State.CurrentDriverState = driver_up;
-//						if(full_up == 1)
-//						{
-//							Passenger_Up();
-//							full_up = 0;
-//							Inputs.driver_up = 0;
-//							ROM_SysCtlDelay(FULL_UP_DOWN_US);
-//							Passenger_Stop();
-//							State.CurrentDriverState = driver_neutral;
-//						}
-//						else 
-							Passenger_Up();
 					}
+					else 
+						Passenger_Up();
 				}
 				else if(Inputs.driver_down)	
 				{
-					if(State.CurrentDriverState != driver_down)
+					if(full_down == 1)
+					{
+						Passenger_Down();
+						full_down = 0;
+						Inputs.driver_down = 0;
+						ROM_SysCtlDelay(FULL_UP_DOWN_US);
+						Passenger_Stop();
+						State.CurrentDriverState = driver_neutral;
+					}				
+					else if(State.CurrentDriverState != driver_down)
 					{
 						State.CurrentDriverState = driver_down;
-//						if(full_down == 1)
-//						{
-//							Passenger_Down();
-//							full_down = 0;
-//							Inputs.driver_down = 0;
-//							ROM_SysCtlDelay(FULL_UP_DOWN_US);
-//							Passenger_Stop();
-//							State.CurrentDriverState = driver_neutral;
-//						}
-//						else 
-							Passenger_Down();
 					}
+					else 
+						Passenger_Down();
 				}
 				else
 				{
@@ -328,38 +326,36 @@ int main()
 					{					
 						if(Inputs.pass_up)
 						{
-							if(State.CurrentPassState != pass_up)
+							if(full_up == 1)
+							{
+								Passenger_Up();
+								full_up = 0;
+								Inputs.pass_up = 0;
+								ROM_SysCtlDelay(FULL_UP_DOWN_US);
+								Passenger_Stop();
+								State.CurrentPassState = pass_neutral;
+							}
+							else if(State.CurrentPassState != pass_up)
 							{
 								State.CurrentPassState = pass_up;
-//								if(full_up == 1)
-//								{
-//									Passenger_Up();
-//									full_up = 0;
-//									Inputs.pass_up = 0;
-//									ROM_SysCtlDelay(FULL_UP_DOWN_US);
-//									Passenger_Stop();
-//									State.CurrentPassState = pass_neutral;
-//								}
-//								else 
 									Passenger_Up();
 							}
 						}
 						else if(Inputs.pass_down)
 						{
-							if(State.CurrentPassState != pass_down)
+							if(full_down == 1)
+							{
+								Passenger_Down();
+								full_down = 0;
+								Inputs.pass_down = 0;
+								ROM_SysCtlDelay(FULL_UP_DOWN_US);
+								Passenger_Stop();
+								State.CurrentPassState = pass_neutral;
+							}
+							else if(State.CurrentPassState != pass_down)
 							{
 								State.CurrentPassState = pass_down;
-//								if(full_down == 1)
-//								{
-//									Passenger_Down();
-//									full_down = 0;
-//									Inputs.pass_down = 0;
-//									ROM_SysCtlDelay(FULL_UP_DOWN_US);
-//									Passenger_Stop();
-//									State.CurrentPassState = pass_neutral;
-//								}
-//								else 
-									Passenger_Down();
+								Passenger_Down();
 							}
 						}
 						else
