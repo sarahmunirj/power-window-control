@@ -19,24 +19,25 @@
 #define LED_PERIPH 			SYSCTL_PERIPH_GPIOF
 #define LED_BASE 				GPIO_PORTF_BASE
 #define RED_LED 				GPIO_PIN_1
+#define BLUE_LED 				GPIO_PIN_2
 
-#define BUTT_PERIPH 		SYSCTL_PERIPH_GPIOC
-#define BUTT_BASE 			GPIO_PORTC_BASE
-#define PASS_UP 				GPIO_PIN_4
-#define PASS_DOWN 			GPIO_PIN_5	
-#define DRIVER_UP 			GPIO_PIN_6
-#define DRIVER_DOWN 		GPIO_PIN_7	
-#define PASS_UP_INT 				GPIO_INT_PIN_4
-#define PASS_DOWN_INT 			GPIO_INT_PIN_5	
-#define DRIVER_UP_INT 			GPIO_INT_PIN_6
-#define DRIVER_DOWN_INT 		GPIO_INT_PIN_7	
+#define BUTT_PERIPH 		SYSCTL_PERIPH_GPIOD
+#define BUTT_BASE 			GPIO_PORTD_BASE
+#define PASS_UP 				GPIO_PIN_0
+#define PASS_DOWN 			GPIO_PIN_1	
+#define DRIVER_UP 			GPIO_PIN_2
+#define DRIVER_DOWN 		GPIO_PIN_3	
+#define PASS_UP_INT 				GPIO_INT_PIN_0
+#define PASS_DOWN_INT 			GPIO_INT_PIN_1	
+#define DRIVER_UP_INT 			GPIO_INT_PIN_2
+#define DRIVER_DOWN_INT 		GPIO_INT_PIN_3	
 
+#define MOT1_PERIPH			SYSCTL_PERIPH_GPIOA
+#define MOT1_BASE 			GPIO_PORTA_BASE
+#define MOT1_A 					GPIO_PIN_4
+#define MOT1_B 					GPIO_PIN_3
 
-#define MOT1_PERIPH			SYSCTL_PERIPH_GPIOD
-#define MOT1_BASE 			GPIO_PORTD_BASE
-#define MOT1_A 					GPIO_PIN_6
-#define MOT1_B 					GPIO_PIN_7
-
+#define FULL_UP_DOWN_US (SysCtlClockGet()/3)*2
 //Define system clock
 
 enum pass_state_e{
@@ -63,25 +64,22 @@ typedef struct state {
 } state;
 
 typedef struct inputs{
-    bool pass_up;
-    bool pass_down;
-    bool driver_up;
-    bool driver_down;
-    bool endswitch; 
-    bool safe_lock;
+	bool pass_up;
+	bool pass_down;
+	bool driver_up;
+	bool driver_down;
+	bool endswitch; 
+	bool safe_lock;
+	bool obstacle;
 } inputs;
-
-//typedef struct outputs{
-//    bool move_up;
-//    bool move_down;
-//} outputs;
-
-
 
 uint32_t SystemCoreClock = 16000000;
 volatile uint32_t counter = 0;
 volatile uint32_t previous_counter = 0;
-volatile uint32_t last_up=0;
+volatile uint32_t last_up = 0;
+volatile uint32_t last_down = 0;
+volatile bool full_up=0;
+volatile bool full_down=0;
 volatile state State;
 volatile inputs Inputs;
 
@@ -92,75 +90,141 @@ void Passenger_Down(void);
 
 void Passenger_Up(void){
 		GPIOPinWrite(LED_BASE,RED_LED, RED_LED);
+		GPIOPinWrite(LED_BASE,BLUE_LED, 0);
 		GPIOPinWrite(MOT1_BASE, MOT1_A, MOT1_A);
 		GPIOPinWrite(MOT1_BASE, MOT1_B, 0);
 }
 
 void Passenger_Down(void){
-		GPIOPinWrite(LED_BASE,RED_LED, RED_LED);
+		GPIOPinWrite(LED_BASE,BLUE_LED, BLUE_LED);
+		GPIOPinWrite(LED_BASE,RED_LED, 0);
 		GPIOPinWrite(MOT1_BASE, MOT1_B, MOT1_B);
 		GPIOPinWrite(MOT1_BASE, MOT1_A, 0);
 }
 
 void Passenger_Stop(void){
 		GPIOPinWrite(LED_BASE,RED_LED, 0);
+		GPIOPinWrite(LED_BASE,BLUE_LED, 0);
 		GPIOPinWrite(MOT1_BASE, MOT1_A, 0);
 		GPIOPinWrite(MOT1_BASE, MOT1_B, 0);
 }
 
-void
-SysTickIntHandler(void)
-	{
+void SysTickIntHandler(void){
     //
     // Update the Systick interrupt counter.
     //
     counter++;
 }
 
-void Button_Handler(void)
-{	
+  
+void Button_Handler(void){	
 	uint32_t status=0;
+	uint32_t value=0;
+
+	uint32_t Pin_Status=0;
 	ROM_SysCtlDelay(50000);
   status = GPIOIntStatus(BUTT_BASE,true);
-  GPIOIntClear(BUTT_BASE,status);
-
+  GPIOIntClear(BUTT_BASE,GPIO_ALL_PINS);
 	
-  if(status & DRIVER_UP_INT)
-		Inputs.driver_up = GPIOPinRead(BUTT_BASE, GPIO_PIN_4);
-    //Then there was a driver up pin interrupt
-  if(status & DRIVER_DOWN_INT)
-    //Then there was a driver up pin interrupt
-    Inputs.driver_down = GPIOPinRead(BUTT_BASE, GPIO_PIN_5);
-   if(status & PASS_UP_INT)
-    //Then there was a driver up pin interrupt
-    Inputs.pass_up = GPIOPinRead(BUTT_BASE, GPIO_PIN_6);
-  if(status & PASS_DOWN_INT)
-    //Then there was a driver up pin interrupt
-    Inputs.pass_down = GPIOPinRead(BUTT_BASE, GPIO_PIN_7); 
-		
-//    if( value==0)
+  if((status & DRIVER_UP_INT)==DRIVER_UP_INT)
+	{
+		value = GPIOPinRead(BUTT_BASE, DRIVER_UP);
+		if ( value == 0 ) 
+		{
+			Inputs.driver_up = 1;
+			last_up = counter;
+		}
+//		else if (counter - last_up <= 500)
 //		{
-//			Passenger_Up();
-//			//state time
-//			last_up = counter;
+//			full_up = 1;
+//			Inputs.driver_up = 1;
+//			last_up = 0;
 //		}
-//		else
+		else 
+		{
+		Inputs.driver_up = 0;
+		}
+	}
+	if((status & DRIVER_DOWN_INT)==DRIVER_DOWN_INT)
+	{
+		value = GPIOPinRead(BUTT_BASE, DRIVER_DOWN);
+		if (value == 0)
+		{
+			Inputs.driver_down = 1;
+			last_down = counter;
+		}
+//		else if (counter - last_down <= 500)
 //		{
+//			full_down = 1;
+//			Inputs.driver_down = 1;
+//			last_down = 0;
+//		}
+		else 
+		{	
+			Inputs.driver_down = 0;
+		}
+	}
+  if((status & PASS_UP_INT) == PASS_UP_INT)
+	{
+		value = GPIOPinRead(BUTT_BASE, PASS_UP);
+		if (value == 0)
+		{
+			Inputs.pass_up = 1;
+			last_up = counter;
+		}
+//		else if (counter - last_up <= 500)
+//		{
+//			full_up = 1;
+//			Inputs.pass_up = 1;
+//			last_up = 0;
+//		}
+		else 
+		{
+			Inputs.pass_up = 0;
+		}
+	}
+  if((status & PASS_DOWN_INT) == PASS_DOWN_INT)
+	{
+		value = GPIOPinRead(BUTT_BASE, PASS_DOWN);
+		if (value == 0)
+		{
+			Inputs.pass_down = 1;
+			last_down = counter;
+		}
+//		else if ((counter - last_down <= 500))
+//		{
+//			full_down = 1;
+//			Inputs.pass_down = 1;
+//			last_down = 0;
+//		}
+				else 
+		{
+			Inputs.pass_down = 0;
+		}
+	}
+}
+//  if (status & DRIVER_UP_INT)
+//	{
+//		value = GPIOPinRead(BUTT_BASE, GPIO_PIN_4);
+//		if( value == 0)
+//			{
+//				Passenger_Up();
+//				//state time
+//				last_up = counter;
+//			}
+//		else
 //			//if time between last up and this down is less than 500 ms then Driver up 
 //			//else driver stop
 //			if (counter - last_up <= 500)
 //			{
 //				Passenger_Up();
-//				ROM_SysCtlDelay(10000000);
-//				Passenger_Stop();
+//				full_up = 1;
 //				last_up = 0;
 //			}
 //			else 
 //				Passenger_Stop();
-//		}
-//	}		
-
-}
+//	}
+//}		
 
 
 
@@ -176,25 +240,28 @@ void system_init(void)
 	ROM_SysCtlPeripheralEnable(MOT1_PERIPH);
 	ROM_SysCtlDelay(1);
 
-	ROM_GPIOPinTypeGPIOOutput(LED_BASE, RED_LED);
+	ROM_GPIOPinTypeGPIOOutput(LED_BASE, RED_LED | BLUE_LED);
 	ROM_GPIOPinTypeGPIOOutput(MOT1_BASE, MOT1_A | MOT1_B);
 	ROM_GPIOPinTypeGPIOInput(BUTT_BASE, PASS_DOWN);
 	ROM_GPIOPinTypeGPIOInput(BUTT_BASE, PASS_UP);
 	ROM_GPIOPinTypeGPIOInput(BUTT_BASE, DRIVER_DOWN);
 	ROM_GPIOPinTypeGPIOInput(BUTT_BASE, DRIVER_UP);
 
-
+		
 	ROM_GPIOPadConfigSet(BUTT_BASE, PASS_DOWN | PASS_UP | DRIVER_DOWN | DRIVER_UP, GPIO_STRENGTH_2MA, GPIO_PIN_TYPE_STD_WPU);// set all switches to be pulledUp
 		
 	GPIOIntDisable(BUTT_BASE, GPIO_ALL_PINS);
 	GPIOIntClear(BUTT_BASE, GPIO_ALL_PINS); 
-	GPIOIntTypeSet(BUTT_BASE, PASS_DOWN | PASS_UP | DRIVER_DOWN | DRIVER_UP ,  GPIO_BOTH_EDGES); // Configure PF4 for falling edge trigger
+	GPIOIntTypeSet(BUTT_BASE, PASS_DOWN ,  GPIO_BOTH_EDGES); 
+	GPIOIntTypeSet(BUTT_BASE, PASS_UP ,  GPIO_BOTH_EDGES); 
+	GPIOIntTypeSet(BUTT_BASE, DRIVER_DOWN ,  GPIO_BOTH_EDGES); 
+	GPIOIntTypeSet(BUTT_BASE, DRIVER_UP ,  GPIO_BOTH_EDGES);
 	GPIOIntRegister(BUTT_BASE,Button_Handler);
-	GPIOIntEnable(BUTT_BASE, GPIO_ALL_PINS);
+	GPIOIntEnable(BUTT_BASE, PASS_DOWN_INT | PASS_UP_INT | DRIVER_DOWN_INT | DRIVER_UP_INT);
 	//ROM_IntPrioritySet(INT_GPIOF_TM4C123, 3);
 
 	SysTickDisable();
-	SysTickPeriodSet(SystemCoreClock/1000);
+	SysTickPeriodSet((SystemCoreClock/3)/1000);
 	SysTickIntRegister(SysTickIntHandler);
 	ROM_IntMasterEnable();
 	SysTickIntEnable();
@@ -203,50 +270,117 @@ void system_init(void)
 	
 int main()
 {
-		State.CurrentState = safe_state;
-		State.CurrentDriverState = driver_neutral;
-		State.CurrentPassState = pass_neutral;
-
-    Inputs.safe_lock = 0;
-    while(1)
+	system_init();
+	State.CurrentState = safe_state;
+	State.CurrentDriverState = driver_neutral;
+	State.CurrentPassState = pass_neutral;
+	//Inputs.driver_down = 1;
+	Inputs.safe_lock = 0;
+	Inputs.obstacle = 0;
+	Inputs.endswitch = 0;
+	while(1)
+	{		
+		if(!Inputs.obstacle)
 		{
-			switch(State.CurrentState){
-					case safe_state:
+			State.CurrentState = safe_state;
+			if(!Inputs.endswitch)
+			{
+				if(Inputs.driver_up)
+				{
+					if(State.CurrentDriverState != driver_up)
 					{
-							switch(State.CurrentDriverState)
-							{
-									case driver_up:
-											Passenger_Up();
-											break;
-									case driver_down:
-											Passenger_Down();
-											break;
-									case driver_neutral:
-											if (Inputs.safe_lock == 0)
-											{
-													switch(State.CurrentPassState){
-															case pass_up:
-																	Passenger_Up();
-																	break;
-															case pass_down:
-																	Passenger_Down();
-																	break;
-															case pass_neutral:
-																	Passenger_Stop();
-															break;
-													}
-											}
-											Passenger_Stop();
-											break;
-									default:
-											Passenger_Stop();
-							}
-							break;
+						State.CurrentDriverState = driver_up;
+//						if(full_up == 1)
+//						{
+//							Passenger_Up();
+//							full_up = 0;
+//							Inputs.driver_up = 0;
+//							ROM_SysCtlDelay(FULL_UP_DOWN_US);
+//							Passenger_Stop();
+//							State.CurrentDriverState = driver_neutral;
+//						}
+//						else 
+							Passenger_Up();
 					}
-					case emergency_down:
-					Passenger_Down();
-					ROM_SysCtlDelay(10000000);
+				}
+				else if(Inputs.driver_down)	
+				{
+					if(State.CurrentDriverState != driver_down)
+					{
+						State.CurrentDriverState = driver_down;
+//						if(full_down == 1)
+//						{
+//							Passenger_Down();
+//							full_down = 0;
+//							Inputs.driver_down = 0;
+//							ROM_SysCtlDelay(FULL_UP_DOWN_US);
+//							Passenger_Stop();
+//							State.CurrentDriverState = driver_neutral;
+//						}
+//						else 
+							Passenger_Down();
+					}
+				}
+				else
+				{
+					State.CurrentDriverState = driver_neutral;
+					if (Inputs.safe_lock == 0)
+					{					
+						if(Inputs.pass_up)
+						{
+							if(State.CurrentPassState != pass_up)
+							{
+								State.CurrentPassState = pass_up;
+//								if(full_up == 1)
+//								{
+//									Passenger_Up();
+//									full_up = 0;
+//									Inputs.pass_up = 0;
+//									ROM_SysCtlDelay(FULL_UP_DOWN_US);
+//									Passenger_Stop();
+//									State.CurrentPassState = pass_neutral;
+//								}
+//								else 
+									Passenger_Up();
+							}
+						}
+						else if(Inputs.pass_down)
+						{
+							if(State.CurrentPassState != pass_down)
+							{
+								State.CurrentPassState = pass_down;
+//								if(full_down == 1)
+//								{
+//									Passenger_Down();
+//									full_down = 0;
+//									Inputs.pass_down = 0;
+//									ROM_SysCtlDelay(FULL_UP_DOWN_US);
+//									Passenger_Stop();
+//									State.CurrentPassState = pass_neutral;
+//								}
+//								else 
+									Passenger_Down();
+							}
+						}
+						else
+						{
+							State.CurrentPassState = pass_neutral;
+							Passenger_Stop();
+						}
+					}
+					else Passenger_Stop();
+				}
 			}
-    }
+			else
+			Passenger_Stop();
+		}
+		else
+		{
+			State.CurrentState = emergency_down;
+			Passenger_Down();
+			ROM_SysCtlDelay(10000000);
+			Passenger_Stop();
+		}	
+	}
 }
 

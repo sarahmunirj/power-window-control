@@ -601,12 +601,11 @@ ARM Macro Assembler    Page 10
               00000000 
               00000200 
               00000000 
-Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M4.fp --apcs=int
-erwork --depend=.\objects\startup_rvmdk.d -o.\objects\startup_rvmdk.o -I.\RTE\_
-Target_1 -IC:\Keil_v5\ARM\PACK\Keil\TM4C_DFP\1.1.0\Device\Include\TM4C123 -IC:\
-Keil_v5\ARM\CMSIS\Include --predefine="__EVAL SETA 1" --predefine="__UVISION_VE
-RSION SETA 525" --predefine="TM4C123GH6PM SETA 1" --list=.\listings\startup_rvm
-dk.lst startup_rvmdk.S
+Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M4.fp.sp --apcs=
+interwork --depend=.\objects\startup_rvmdk.d -o.\objects\startup_rvmdk.o -IC:\K
+eil_v5\ARM\PACK\Keil\TM4C_DFP\1.1.0\Device\Include\TM4C123 --predefine="__EVAL 
+SETA 1" --predefine="__UVISION_VERSION SETA 536" --predefine="TM4C123GH6PM SETA
+ 1" --list=.\listings\startup_rvmdk.lst startup_rvmdk.S
 
 
 

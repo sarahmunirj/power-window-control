@@ -1,4 +1,4 @@
---cpu=Cortex-M4.fp
+--cpu=Cortex-M4.fp.sp
 ".\objects\startup_rvmdk.o"
 ".\objects\main.o"
 ".\objects\list.o"
